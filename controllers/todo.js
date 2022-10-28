@@ -1,3 +1,8 @@
+// File name: COMP229005-F2022-MidTerm-301216704
+// Author's name: Chung Yin Tsang
+// StudentID: 301216704
+// Web App name: COMP229005-F2022-MidTerm-301216704
+
 // create a reference to the model
 let TodoModel = require('../models/todo');
 
@@ -48,6 +53,24 @@ module.exports.details = (req, res, next) => {
 module.exports.displayEditPage = (req, res, next) => {
     
     // ADD YOUR CODE HERE
+    let id = req.params.id;
+
+    TodoModel.findById(id, (err, taskToEdit) => {
+        if(err)
+        {
+            console.log(err);
+            res.end(err);
+        }
+        else
+        {
+            //show the edit view
+            res.render('todo/add_edit', {
+                title: 'Edit Task', 
+                todo: taskToEdit,
+                userName: req.user ? req.user.username : ''
+            })
+        }
+    });
 
 }
 
@@ -66,6 +89,19 @@ module.exports.processEditPage = (req, res, next) => {
     });
 
     // ADD YOUR CODE HERE
+    //edit by id
+    TodoModel.updateOne({_id: id}, updatedTodo, (err) => {
+        if(err)
+        {
+            console.log(err);
+            res.end(err);
+        }
+        else
+        {
+            //Redirect to list page
+            res.redirect('/todo/list');
+        }
+    });
 
 }
 
@@ -73,6 +109,21 @@ module.exports.processEditPage = (req, res, next) => {
 module.exports.performDelete = (req, res, next) => {
 
     // ADD YOUR CODE HERE
+    let id = req.params.id;
+
+    //Remove by id
+    TodoModel.remove({_id: id}, (err) => {
+        if(err)
+        {
+            console.log(err);
+            res.end(err);
+        }
+        else
+        {
+            //Redirect to list page
+            res.redirect('/todo/list');
+        }
+    });
 
 }
 
@@ -103,5 +154,16 @@ module.exports.processAddPage = (req, res, next) => {
     });
 
     // ADD YOUR CODE HERE
-    
+    TodoModel.create(newTodo, (err, todo) =>{
+        if(err)
+        {
+            console.log(err);
+            res.end(err);
+        }
+        else
+        {
+            //Redirect to list page
+            res.redirect('/todo/list');
+        }
+    });
 }
