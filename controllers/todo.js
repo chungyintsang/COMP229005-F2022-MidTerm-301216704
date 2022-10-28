@@ -79,7 +79,14 @@ module.exports.performDelete = (req, res, next) => {
 // Renders the Add form using the add_edit.ejs template
 module.exports.displayAddPage = (req, res, next) => {
 
-    // ADD YOUR CODE HERE          
+    // ADD YOUR CODE HERE
+    let newTodo = TodoModel();
+
+    res.render('todo/add_edit', {
+        title: 'Add a New To-do Item',
+        todo: newTodo,
+        userName: req.user ? req.user.username : ''
+    })           
 
 }
 
